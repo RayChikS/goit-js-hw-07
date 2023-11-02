@@ -1,46 +1,72 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
-import * as basicLightbox from 'basiclightbox'
 
 
-//знаходимо всі елементи img тому юзаємо querySelectorAll
 const galleryImages = document.querySelectorAll('.gallery__image'); 
-//
-const galleryLink = document.querySelector('.gallery__link')
-//знаходимо галерею
-const gallery = document.querySelector('ul.gallery')
 
-//перебираємо всі елементи та змінюємо їх значення через forEach
-galleryImages.forEach((image, index) => {
-	image.src = galleryItems[index].preview; 
-  image.dataset.source = galleryItems[index].original; 	
-  image.alt = galleryItems[index].description; 
-});
-galleryLink.forEach((link, index) => {
-	link.href = galleryItems[index].original;
-});
+const gallery = document.querySelector('ul.gallery');
 
 
-//додаємо слухач до батьківського елемента
+
+
+function createGalleryItem(previewSrc, originalSrc, description) {
+  // Створення елемента <li> для галереї
+  const galleryItem = document.createElement('li');
+  galleryItem.classList.add('gallery__item');
+
+  // Створення посилання <a>
+  const galleryLink = document.createElement('a');
+  galleryLink.classList.add('gallery__link');
+  galleryLink.href = galleryItems;
+
+  // Створення зображення <img>
+  const galleryImage = document.createElement('img');
+  galleryImage.classList.add('gallery__image');
+  galleryImage.src = previewSrc;
+  galleryImage.dataset.source = originalSrc;
+  galleryImage.alt = description;
+
+  // Додавання <img> до <a>
+  galleryLink.appendChild(galleryImage);
+
+  // Додавання <a> до <li>
+  galleryItem.appendChild(galleryLink);
+
+	//Повертаємо елемент <li>
+  return galleryItem;
+}
+
+//Створюємо ф-цію для завантаження зображень з масива
+function createGallery() {
+
+  galleryItems.forEach((item) => {
+    const galleryItem = createGalleryItem(item.preview, item.original, item.description);
+    gallery.appendChild(galleryItem);
+  });
+}
+//Викликаємо ф-цію
+createGallery();
+
+
+
+
 gallery.addEventListener('click', eventHandler);
 
-//створюємо ф-цію для обробки натискання на елемент
 function eventHandler(event) {
+	event.preventDefault();
   
   const target = event.target;
 
   
-  if (target.classList.contains('gallery__item')) {
-    
-		const imageUrl = target.querySelector('img').getAttribute('data-source');
+  if (target.nodeName !== 'IMG') {
+    return
+	}
+	const imageUrl = target.getAttribute('data-source');
+	const imageAlt = target.getAttribute('alt');
 		
-		
-
 		const instance = basicLightbox.create(`
-    	<img src="${imageUrl}">
+    	<img src="${imageUrl}" alt="${imageAlt}">
 		`)
-		instance.show()
-
-
-  }
+	instance.show()
+	
 }
