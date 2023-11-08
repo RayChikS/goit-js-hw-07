@@ -17,7 +17,7 @@ function createGalleryItem(previewSrc, originalSrc, description) {
   // Створення посилання <a>
   const galleryLink = document.createElement('a');
   galleryLink.classList.add('gallery__link');
-  galleryLink.href = galleryItems;
+  galleryLink.href = originalSrc;
 
   // Створення зображення <img>
   const galleryImage = document.createElement('img');
